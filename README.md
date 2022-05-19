@@ -1,3 +1,3 @@
 # Computer-Vision
 
-Record some useful models in Computer Vision / Deep learning
+Record practicing some useful models and tools in Computer Vision / Deep learning
