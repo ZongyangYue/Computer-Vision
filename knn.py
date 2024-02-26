@@ -1,6 +1,6 @@
 import numpy as np
 
-class NearestNeighbor:
+class OneNearestNeighbor:
     def __init__(self):
         pass
 
@@ -28,3 +28,44 @@ class NearestNeighbor:
             y_pred[i] = self.ytrain[min_index] #the label of the nearest example is assigned to the test example
 
         return y_pred
+
+class KNN:
+    def __init__(self, k=5):
+        self.k = k
+
+    def fit(self, X_train, y_train):
+        self.X_train = X_train
+        self.y_train = y_train
+
+    def predict(self, X_test):
+        y_pred = []
+        for x in X_test:
+            distances = np.sqrt(np.sum((self.X_train - x) ** 2, axis=1))
+            nearest_neighbors = np.argsort(distances)[:self.k]
+            nearest_labels = self.y_train[nearest_neighbors]
+            unique, counts = np.unique(nearest_labels, return_counts=True)
+            y_pred.append(unique[np.argmax(counts)])
+        return np.array(y_pred)
+
+# Example usage:
+if __name__ == "__main__":
+    # Sample data
+    X_train = np.array([[1, 2], [2, 3], [3, 4], [4, 5]])
+    y_train = np.array([0, 0, 1, 1])
+    X_test = np.array([[2, 2], [3, 3]])
+    y_test = np.array([0, 1])
+
+    # Create and train KNN classifier
+    knn = KNN()
+    knn.fit(X_train, y_train)
+
+    # Predict
+    y_pred_train = knn.predict(X_train)
+    y_pred_test = knn.predict(X_test)
+
+    # Calculate accuracies
+    train_accuracy = np.mean(y_pred_train == y_train)
+    test_accuracy = np.mean(y_pred_test == y_test)
+
+    print("Training Accuracy:", train_accuracy)
+    print("Test Accuracy:", test_accuracy)
